@@ -7,11 +7,16 @@ const app = express();
 app.use(express.json());
 // app.use(express.static(''))
 
+// Routes
+
 app.get('/api/test', (req, res) => {
     res.json('Get test started')
 })
 
 
+
+
+// Port and DB Connection
 const port = process.env.PORT || 4000;
 app.listen(port, async () => {
     try {
