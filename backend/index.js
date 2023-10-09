@@ -17,8 +17,8 @@ require('dotenv').config();
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
-const bucket = 'dawid-booking-app';
+const jwtSecret = process.env.JWT_SECRET;
+const bucket = process.env.S3_BUCKET_NAME;
 
 // Middlewares
 app.use(express.json());
