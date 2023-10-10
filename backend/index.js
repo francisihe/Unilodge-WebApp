@@ -43,27 +43,14 @@ async function uploadToS3(path, originalFilename, mimetype) {
     const ext = parts[parts.length - 1];
     const newFilename = Date.now() + '.' + ext;
 
-    try{
-        await client.send(new PutObjectCommand({
-            Bucket: bucket,
-            Body: fs.readFileSync(path),
-            Key: newFilename,
-            ContentType: mimetype,
-            ACL: 'public-read',
-        }));
-        return `https://${bucket}.s3.us-east-2.amazonaws.com/${newFilename}`;
-    } catch (err) {
-        console.log(err)
-    }
-
-    // await client.send(new PutObjectCommand({
-    //     Bucket: bucket,
-    //     Body: fs.readFileSync(path),
-    //     Key: newFilename,
-    //     ContentType: mimetype,
-    //     ACL: 'public-read',
-    // }));
-    // return `https://${bucket}.s3.us-east-2.amazonaws.com/${newFilename}`;
+    await client.send(new PutObjectCommand({
+        Bucket: bucket,
+        Body: fs.readFileSync(path),
+        Key: newFilename,
+        ContentType: mimetype,
+        ACL: 'public-read',
+    }));
+    return `https://${bucket}.s3.us-east-2.amazonaws.com/${newFilename}`;
 }           //https://francis-airbnb-bucket.s3.us-east-2.amazonaws.com/Screenshot+from+2023-10-09+18-28-34.png
 
 function getUserDataFromReq(req) {
