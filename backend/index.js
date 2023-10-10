@@ -33,7 +33,7 @@ app.use(cors({
 // Functions to Upload to AWS Bucket and GetFormUserData
 async function uploadToS3(path, originalFilename, mimetype) {
     const client = new S3Client({
-        region: 'us-east-1',
+        region: 'us-east-2',
         credentials: {
             accessKeyId: process.env.S3_ACCESS_KEY,
             secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
@@ -42,15 +42,29 @@ async function uploadToS3(path, originalFilename, mimetype) {
     const parts = originalFilename.split('.');
     const ext = parts[parts.length - 1];
     const newFilename = Date.now() + '.' + ext;
-    await client.send(new PutObjectCommand({
-        Bucket: bucket,
-        Body: fs.readFileSync(path),
-        Key: newFilename,
-        ContentType: mimetype,
-        ACL: 'public-read',
-    }));
-    return `https://${bucket}.s3.amazonaws.com/${newFilename}`;
-}
+
+    try{
+        await client.send(new PutObjectCommand({
+            Bucket: bucket,
+            Body: fs.readFileSync(path),
+            Key: newFilename,
+            ContentType: mimetype,
+            ACL: 'public-read',
+        }));
+        return `https://${bucket}.s3.us-east-2.amazonaws.com/${newFilename}`;
+    } catch (err) {
+        console.log(err)
+    }
+
+    // await client.send(new PutObjectCommand({
+    //     Bucket: bucket,
+    //     Body: fs.readFileSync(path),
+    //     Key: newFilename,
+    //     ContentType: mimetype,
+    //     ACL: 'public-read',
+    // }));
+    // return `https://${bucket}.s3.us-east-2.amazonaws.com/${newFilename}`;
+}           //https://francis-airbnb-bucket.s3.us-east-2.amazonaws.com/Screenshot+from+2023-10-09+18-28-34.png
 
 function getUserDataFromReq(req) {
     return new Promise((resolve, reject) => {
@@ -81,7 +95,6 @@ app.post('/api/register', async (req, res) => {
     } catch (e) {
         res.status(422).json(e);
     }
-
 });
 
 app.post('/api/login', async (req, res) => {
@@ -128,12 +141,14 @@ app.post('/api/logout', (req, res) => {
 app.post('/api/upload-by-link', async (req, res) => {
     const { link } = req.body;
     const newName = 'photo' + Date.now() + '.jpg';
+
     await imageDownloader.image({
         url: link,
         dest: '/tmp/' + newName,
+        timeout: 30000 // Added the timeout section
     });
     const url = await uploadToS3('/tmp/' + newName, newName, mime.lookup('/tmp/' + newName));
-    res.json(url);
+    res.json(url)
 });
 
 const photosMiddleware = multer({ dest: '/tmp' });
