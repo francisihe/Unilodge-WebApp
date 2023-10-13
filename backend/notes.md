@@ -37,3 +37,7 @@ Error: querySrv ESERVFAIL _mongodb._tcp.unilodge-airbnb-cluster.irfgmhz.mongodb.
   syscall: 'querySrv',
   hostname: '_mongodb._tcp.unilodge-airbnb-cluster.irfgmhz.mongodb.net'
 }
+
+3. Fix the Menu Item on the Admin page and the routing to the sub pages
+
+4. 
