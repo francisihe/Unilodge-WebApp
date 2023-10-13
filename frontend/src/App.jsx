@@ -46,6 +46,8 @@ function App() {
             <Route path="/admin/properties" element={<PropertyListings />} />
             <Route path="/admin/properties/new" element={<PropertyFormPage />} />
             <Route path="/admin/properties/:id" element={<PropertyFormPage />} />
+            {/*Add bookings route to enable admin see all bookings */}
+            {/*Add bookings/:id route to enable admin see all single bookings page */}
           </Route>
         </Routes>
       </UserContextProvider>

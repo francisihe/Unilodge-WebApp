@@ -13,3 +13,8 @@ I temporarily switched the "start" command in package.json file to use nodemon f
 4.  S3_SECRET_ACCESS_KEY (Your AWS Secret key)
 5.  JWT_SECRET
 6.  S3_BUCKET_NAME
+
+
+// Updates - custom 2 branch
+1. Updated User Model to include role and bookmarks
+2. Created Property Model
