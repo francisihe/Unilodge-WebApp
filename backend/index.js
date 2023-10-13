@@ -12,6 +12,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const multer = require('multer');
 const fs = require('fs');
 const mime = require('mime-types');
+const Property = require('./models/Property.js');
 
 require('dotenv').config();
 const app = express();
@@ -206,6 +207,76 @@ app.put('/api/places', async (req, res) => {
 app.get('/api/places', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
     res.json(await Place.find());
+});
+
+app.delete('/api/properties/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.body;
+
+    const propertyDoc = await Property.findByIdAndDelete(id);
+    res.json(`Property has been deleted`)
+
+    // jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    //     const propertyDoc = await Property.findByIdAndDelete(id);
+    //     res.json(`Property has been deleted`)
+    // });
+})
+
+app.put('/api/properties/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
+    const { token } = req.cookies;
+    const { id, title, address, propertyType, propertyStatus, category,
+        description, price, features, addedPhotos, size } = req.body;
+
+    const propertyDoc = await Property.findById(id);
+    if (id) {
+        propertyDoc.set({
+            title, address, propertyType, propertyStatus, category,
+            description, price, features, photos: addedPhotos, size
+        });
+        await propertyDoc.save();
+        res.json('Updated Property')
+    }
+
+    // jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    //     const propertyDoc = await Property.findById(id);
+    //     if (id) {
+    //         propertyDoc.set({
+    //             title, address, propertyType, propertyStatus, category,
+    //             description, price, features, photos: addedPhotos, size
+    //         });
+    //         await propertyDoc.save();
+    //         res.json('Updated Property')
+    //     });
+});
+
+app.post('/api/properties', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
+    const { token } = req.cookies;
+    const { title, address, propertyType, propertyStatus, category,
+        description, price, features, photos, size } = req.body;
+
+    const propertyDoc = await Property.create({
+        title, address, propertyType, propertyStatus, category,
+        description, price, features, photos, size
+    });
+    res.json(propertyDoc);
+
+    // jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    //     if (err) throw err;
+    //     const propertyDoc = await Property.create({
+    //         title, address, propertyType, propertyStatus, category,
+    //         description, price, features, photos, size
+    //     });
+    //     res.json(propertyDoc);
+    // });
+});
+
+app.get('/api/properties', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    res.json(await Property.find())
 });
 
 app.post('/api/bookings', async (req, res) => {

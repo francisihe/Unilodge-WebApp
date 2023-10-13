@@ -40,4 +40,8 @@ Error: querySrv ESERVFAIL _mongodb._tcp.unilodge-airbnb-cluster.irfgmhz.mongodb.
 
 3. Fix the Menu Item on the Admin page and the routing to the sub pages
 
-4. 
+4. Prevent ability to navigate to register and login pages when already logged in, instead show "already logged in message"
+
+5.  Create middleware to cater to routes that do not exist yet
+
+6.  
