@@ -12,6 +12,8 @@ import PlacesFormPage from "./pages/PlacesFormPage";
 import PlacePage from "./pages/PlacePage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
+import AdminPage from './pages/AdminPage';
+import PropertyListings from './components/PropertyListings';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
 axios.defaults.withCredentials = true;
@@ -33,6 +35,10 @@ function App() {
             <Route path="/place/:id" element={<PlacePage />} />
             <Route path="/account/bookings" element={<BookingsPage />} />
             <Route path="/account/bookings/:id" element={<BookingPage />} />
+
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/properties" element={<PropertyListings />} />
+            <Route path="/admin/properties/:id" element={<PlacesFormPage />} />
           </Route>
         </Routes>
       </UserContextProvider>
