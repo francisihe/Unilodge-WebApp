@@ -211,9 +211,9 @@ app.get('/api/places', async (req, res) => {
 
 app.delete('/api/properties/:id', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
-    const { id } = req.body;
+    const { id } = req.params;
 
-    const propertyDoc = await Property.findByIdAndDelete(id);
+    await Property.findByIdAndDelete(id);
     res.json(`Property has been deleted`)
 
     // jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -226,17 +226,18 @@ app.put('/api/properties/:id', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
 
     const { token } = req.cookies;
-    const { id, title, address, propertyType, propertyStatus, category,
+    const { id } = req.params;
+    const { title, address, propertyType, propertyStatus, category,
         description, price, features, addedPhotos, size } = req.body;
 
     const propertyDoc = await Property.findById(id);
-    if (id) {
+    if (propertyDoc) {
         propertyDoc.set({
             title, address, propertyType, propertyStatus, category,
             description, price, features, photos: addedPhotos, size
         });
         await propertyDoc.save();
-        res.json('Updated Property')
+        res.json(`Updated Property with ID ${id}`)
     }
 
     // jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -274,10 +275,66 @@ app.post('/api/properties', async (req, res) => {
     // });
 });
 
+app.get('/api/properties/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    const propertyDoc = await Property.findById(id);
+
+    if (propertyDoc) {
+        res.json(propertyDoc)
+    } else {
+        res.json(`Property with ID ${id} does not exist`)
+    };
+});
+
 app.get('/api/properties', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
     res.json(await Property.find())
 });
+
+// Defining Users Route for admin to be able to view, update and delete users
+
+app.get('/api/users', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    res.json(await User.find({}));
+})
+
+app.get('/api/users/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    const userDoc = await User.findById(id);
+
+    if (userDoc) {
+        res.json(userDoc)
+    } else {
+        res.json(`No such user exists`)
+    };
+})
+
+app.put('/api/users/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    const { name, email, password, role } = req.body;
+    const userDoc = await User.findById(id);
+
+    if (userDoc) {
+        userDoc.set({
+            name,
+            email,
+            password: bcrypt.hashSync(password, bcryptSalt),
+            role
+        });
+        await userDoc.save();
+        res.json(`User ${name} with ${email} has been updated`)
+    }
+})
+
+app.delete('/api/users/:id', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    await User.findByIdAndDelete(id)
+    res.json(`User with ID ${id} has been deleted`)
+})
 
 app.post('/api/bookings', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);

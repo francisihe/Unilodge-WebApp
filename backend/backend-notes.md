@@ -18,5 +18,7 @@ I temporarily switched the "start" command in package.json file to use nodemon f
 // Updates - custom 2 branch
 1. Updated User Model to include role and bookmarks
 2. Created Property Model
-3. Created Properties endpoint
-4. 
+3. Created GET Properties endpoint
+4. Created Post Property endpoint
+5. Created PUT and Delete
+6. Created User GEt, PUT and Delete endpoints

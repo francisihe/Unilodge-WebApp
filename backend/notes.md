@@ -15,7 +15,7 @@ For customization,
 
 Others:
 1.  Implement Password Reser
-2.  Implement Email notification for login
+2.  Implement Email verification for signup and notification for login
 3.  Implement Payment Processing via mail and booking
 
 
@@ -44,4 +44,8 @@ Error: querySrv ESERVFAIL _mongodb._tcp.unilodge-airbnb-cluster.irfgmhz.mongodb.
 
 5.  Create middleware to cater to routes that do not exist yet
 
-6.  
+6.  Create middleware to check for JWT tokens for specific routes
+
+7.  Update the json.status for all the routes witht the appropriate ones.
+
+8.  
